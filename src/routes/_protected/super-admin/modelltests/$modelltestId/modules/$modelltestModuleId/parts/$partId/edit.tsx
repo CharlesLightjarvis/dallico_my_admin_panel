@@ -130,8 +130,21 @@ function EditPartPage() {
         }}
         initialQuestions={initialQuestions}
         initialPartChoices={initialPartChoices}
-        onSubmit={async (data, _questions, _partChoices) => {
-          return updatePart.mutateAsync({ id: partId, ...data });
+        onSubmit={async (
+          data,
+          questions,
+          partChoices,
+          removedQuestionIds,
+          removedChoiceIds
+        ) => {
+          return updatePart.mutateAsync({
+            id: partId,
+            ...data,
+            questions,
+            part_choices: partChoices,
+            removed_question_ids: removedQuestionIds,
+            removed_choice_ids: removedChoiceIds,
+          });
         }}
         isPending={updatePart.isPending}
         submitLabel="Mettre à jour"

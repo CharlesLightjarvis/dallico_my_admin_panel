@@ -51,7 +51,9 @@ interface PartFormProps {
   onSubmit: (
     data: CreatePartFormData,
     questions: QuestionDraft[],
-    partChoices: PartChoiceDraft[]
+    partChoices: PartChoiceDraft[],
+    removedQuestionIds: string[],
+    removedChoiceIds: string[]
   ) => Promise<Part>;
   isPending: boolean;
   submitLabel: string;
@@ -83,6 +85,10 @@ export function PartForm({
 
   const questionType = form.watch("question_type") as QuestionType;
   const isDisabled = isPending || form.formState.isSubmitting;
+  const [removedQuestionIds, setRemovedQuestionIds] = React.useState<string[]>(
+    []
+  );
+  const [removedChoiceIds, setRemovedChoiceIds] = React.useState<string[]>([]);
 
   const [questions, setQuestions] =
     React.useState<QuestionDraft[]>(initialQuestions);
@@ -119,6 +125,19 @@ export function PartForm({
   };
 
   const removeQuestion = (idx: number) => {
+    const q = questions[idx];
+    console.log("🗑️ removeQuestion called, q.id:", q.id);
+    if (q.id) {
+      setRemovedQuestionIds((prev) => {
+        const next = [...prev, q.id!];
+        console.log("🗑️ removedQuestionIds après:", next);
+        return next;
+      });
+      const choiceIds = q.choices.filter((c) => c.id).map((c) => c.id!);
+      if (choiceIds.length > 0) {
+        setRemovedChoiceIds((prev) => [...prev, ...choiceIds]);
+      }
+    }
     setQuestions((prev) => prev.filter((_, i) => i !== idx));
   };
 
@@ -159,6 +178,10 @@ export function PartForm({
   };
 
   const removePartChoice = (idx: number) => {
+    const pc = partChoices[idx];
+    if (pc.id) {
+      setRemovedChoiceIds((prev) => [...prev, pc.id!]);
+    }
     setPartChoices((prev) => prev.filter((_, i) => i !== idx));
   };
 
@@ -170,7 +193,15 @@ export function PartForm({
 
   const handleSubmit = async (data: CreatePartFormData) => {
     try {
-      await onSubmit(data, questions, partChoices);
+      console.log("🗑️ removedQuestionIds:", removedQuestionIds);
+      console.log("🗑️ removedChoiceIds:", removedChoiceIds);
+      await onSubmit(
+        data,
+        questions,
+        partChoices,
+        removedQuestionIds,
+        removedChoiceIds
+      );
       myGoeyToast("success", "Sauvegardé", {
         description: "La partie a été sauvegardée avec succès.",
       });

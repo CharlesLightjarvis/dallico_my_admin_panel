@@ -1,4 +1,4 @@
-import type { Question, QuestionType } from "./question";
+import type { Question, QuestionDraft, QuestionType } from "./question";
 
 export interface Part {
   id: string;
@@ -8,7 +8,6 @@ export interface Part {
   question_type: QuestionType;
   instructions: string;
   context_text: string | null;
-  context_audio_url: string | null;
   created_at: string;
   updated_at: string;
   choices: PartChoice[];
@@ -34,13 +33,19 @@ export interface PartChoice {
   question_id: string | null;
 }
 
+// types/part.ts
 export interface CreatePartPayload {
   modelltest_module_id: string;
   order: number;
   label?: string | null;
-  question_type: string;
+  question_type: QuestionType;
   instructions: string;
   context_text?: string | null;
+  questions?: QuestionDraft[];
+  part_choices?: PartChoiceDraft[];
 }
 
-export interface UpdatePartPayload extends Partial<CreatePartPayload> {}
+export interface UpdatePartPayload extends Partial<CreatePartPayload> {
+  removed_question_ids?: string[];
+  removed_choice_ids?: string[];
+}

@@ -66,8 +66,23 @@ function CreatePartPage() {
           ...createPartDefaultValues,
           modelltest_module_id: modelltestModuleId,
         }}
-        onSubmit={async (data, _questions, _partChoices) => {
-          return createPart.mutateAsync(data);
+        onSubmit={async (
+          data,
+          questions,
+          partChoices,
+          _removedQuestionIds,
+          _removedChoiceIds
+        ) => {
+          const payload = {
+            ...data,
+            questions,
+            part_choices: partChoices,
+          };
+          console.log(
+            "📦 Payload envoyé au back:",
+            JSON.stringify(payload, null, 2)
+          );
+          return createPart.mutateAsync(payload);
         }}
         isPending={createPart.isPending}
         submitLabel="Créer la partie"

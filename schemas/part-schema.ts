@@ -1,11 +1,11 @@
-import { QUESTION_TYPES } from "../types/question";
+import { QUESTION_TYPES, type QuestionType } from "../types/question";
 import { z } from "zod";
 
 export const createPartSchema = z.object({
   modelltest_module_id: z.string().uuid("Module requis"),
   order: z.number().min(1, "L'ordre est requis"),
   label: z.string().nullable().optional(),
-  question_type: z.enum(QUESTION_TYPES as [string, ...string[]], {
+  question_type: z.enum(QUESTION_TYPES as [QuestionType, ...QuestionType[]], {
     required_error: "Type requis",
   }),
   instructions: z.string().min(1, "Les instructions sont requises"),

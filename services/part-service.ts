@@ -11,17 +11,18 @@ export const partService = {
 
   async getPart(id: string): Promise<Part> {
     const { data } = await api.get<{ data: Part }>(`/api/v1/parts/${id}`);
-    console.log(data.data);
-
     return data.data;
   },
 
   async createPart(payload: CreatePartPayload): Promise<Part> {
+    console.log("📦 Payload envoyé:", JSON.stringify(payload, null, 2));
     const { data } = await api.post<{ data: Part }>("/api/v1/parts", payload);
+    console.log("✅ Réponse reçue:", JSON.stringify(data.data, null, 2));
     return data.data;
   },
 
   async updatePart(id: string, payload: UpdatePartPayload): Promise<Part> {
+    console.log("📦 Payload envoyé:", JSON.stringify(payload, null, 2));
     const { data } = await api.put<{ data: Part }>(
       `/api/v1/parts/${id}`,
       payload
