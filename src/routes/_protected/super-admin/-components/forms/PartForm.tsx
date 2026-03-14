@@ -435,9 +435,15 @@ export function PartForm({
               <div className="space-y-2">
                 {partChoices.map((pc, idx) => (
                   <div key={idx} className="flex items-center gap-2">
-                    <span className="w-6 text-xs font-mono text-muted-foreground shrink-0">
-                      {pc.label}
-                    </span>
+                    <Input
+                      value={pc.label}
+                      onChange={(e) =>
+                        updatePartChoice(idx, { label: e.target.value })
+                      }
+                      disabled={isDisabled}
+                      className="w-14 text-xs font-mono text-center shrink-0"
+                      placeholder="a"
+                    />
                     <Input
                       value={pc.text}
                       onChange={(e) =>
@@ -576,10 +582,14 @@ export function PartForm({
                     />
                   </Field>
 
-                  {/* Correct answer — ZUORDNUNG */}
-                  {questionType === "ZUORDNUNG" && (
+                  {/* Correct answer — ZUORDNUNG / DRAG_DROP_MOT */}
+                  {(questionType === "ZUORDNUNG" || questionType === "DRAG_DROP_MOT") && (
                     <Field>
-                      <FieldLabel>Réponse correcte (label)</FieldLabel>
+                      <FieldLabel>
+                        {questionType === "DRAG_DROP_MOT"
+                          ? "Mot correct (label du mot)"
+                          : "Réponse correcte (label)"}
+                      </FieldLabel>
                       <Input
                         value={q.correct_answer ?? ""}
                         onChange={(e) =>
@@ -588,7 +598,11 @@ export function PartForm({
                           })
                         }
                         disabled={isDisabled}
-                        placeholder="a, b, c… ou x"
+                        placeholder={
+                          questionType === "DRAG_DROP_MOT"
+                            ? "a, b, c… (label du mot dans la banque)"
+                            : "a, b, c… ou x"
+                        }
                       />
                     </Field>
                   )}

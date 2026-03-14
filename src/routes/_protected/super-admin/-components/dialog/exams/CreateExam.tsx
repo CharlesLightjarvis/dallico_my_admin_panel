@@ -1,7 +1,7 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { isAxiosError, extractJsonApiFieldErrors } from "@/lib/api";
+import { isAxiosError } from "@/lib/api";
 import { myGoeyToast } from "@/lib/goey-toast-presets";
 
 import { Button } from "@/components/ui/button";
